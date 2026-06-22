@@ -1,24 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES2023",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "lib": ["ES2023"],
-    "rootDir": ".",
-    "outDir": "dist",
     "strict": true,
     "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": false,
-    "exactOptionalPropertyTypes": false,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "types": ["node", "mocha", "chai"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "Tool Triggering (Synthetic Data)/**/*.ts"],
-  "exclude": ["node_modules", "dist", "build", "reports"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", "dist", "build", "reports", "coverage"]
 }

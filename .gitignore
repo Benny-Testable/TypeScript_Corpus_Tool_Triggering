@@ -18,3 +18,5 @@ coverage-nyc/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+coverage*/
+.vitest-cache/
