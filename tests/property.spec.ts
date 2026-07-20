@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import { OrderService } from "../src/services/order-service";
 import { effectiveRate } from "../src/services/pricing-rules";

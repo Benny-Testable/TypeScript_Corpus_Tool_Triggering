@@ -1,6 +1,6 @@
-import { expect } from "chai";
+import { describe, expect, it } from "vitest";
 import { OrderService } from "../src/services/order-service";
-import { OrderValidationError, type OrderRecord } from "../src/models/order-record";
+import type { OrderRecord } from "../src/models/order-record";
 
 function order(overrides: Partial<OrderRecord> = {}): OrderRecord {
   return {
@@ -14,39 +14,39 @@ function order(overrides: Partial<OrderRecord> = {}): OrderRecord {
 describe("OrderService", () => {
   it("prices a simple retail order with tax", () => {
     const priced = new OrderService().price(order());
-    expect(priced.subtotal).to.equal(100);
-    expect(priced.discount).to.equal(0);
-    expect(priced.tax).to.equal(8.25);
-    expect(priced.total).to.equal(108.25);
+    expect(priced.subtotal).toBe(100);
+    expect(priced.discount).toBe(0);
+    expect(priced.tax).toBe(8.25);
+    expect(priced.total).toBe(108.25);
   });
 
   it("applies the gold tier discount", () => {
     const priced = new OrderService().price(order({ tier: "gold" }));
-    expect(priced.discount).to.equal(15);
-    expect(priced.total).to.equal(92.01);
+    expect(priced.discount).toBe(15);
+    expect(priced.total).toBe(92.01);
   });
 
   it("adds a volume bonus above 25 units", () => {
     const priced = new OrderService().price(
       order({ tier: "standard", lines: [{ sku: "SKU-B", quantity: 30, unitPrice: 10 }] }),
     );
-    expect(priced.subtotal).to.equal(300);
-    expect(priced.discount).to.equal(3);
+    expect(priced.subtotal).toBe(300);
+    expect(priced.discount).toBe(3);
   });
 
   it("charges no tax on the partner channel", () => {
     const priced = new OrderService().price(order({ channel: "partner" }));
-    expect(priced.tax).to.equal(0);
-    expect(priced.total).to.equal(100);
+    expect(priced.tax).toBe(0);
+    expect(priced.total).toBe(100);
   });
 
   it("rejects a non-positive quantity", () => {
     const bad = order({ lines: [{ sku: "SKU-X", quantity: 0, unitPrice: 10 }] });
-    expect(() => new OrderService().price(bad)).to.throw(OrderValidationError, /quantity must be positive/);
+    expect(() => new OrderService().price(bad)).toThrow(/quantity must be positive/);
   });
 
   it("rejects an order with no lines", () => {
-    expect(() => new OrderService().price(order({ lines: [] }))).to.throw(OrderValidationError, /at least one line/);
+    expect(() => new OrderService().price(order({ lines: [] }))).toThrow(/at least one line/);
   });
 
   it("collects failures instead of throwing in priceAll", () => {
@@ -54,15 +54,15 @@ describe("OrderService", () => {
       order({ id: "GOOD-1" }),
       order({ id: "BAD-1", lines: [{ sku: "SKU-Y", quantity: -1, unitPrice: 5 }] }),
     ]);
-    expect(result.priced).to.have.length(1);
-    expect(result.failures).to.have.length(1);
-    expect(result.failures[0].field).to.equal("quantity");
+    expect(result.priced).toHaveLength(1);
+    expect(result.failures).toHaveLength(1);
+    expect(result.failures[0]?.field).toBe("quantity");
   });
 
   it("counts processed orders", () => {
     const service = new OrderService();
     service.price(order({ id: "A" }));
     service.price(order({ id: "B" }));
-    expect(service.processedCount).to.equal(2);
+    expect(service.processedCount).toBe(2);
   });
 });

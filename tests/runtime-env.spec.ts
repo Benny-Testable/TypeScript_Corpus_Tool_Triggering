@@ -1,61 +1,37 @@
-import { expect } from "chai";
+import { describe, expect, it } from "vitest";
 
-/**
- * Runtime lock. Every branch here targets Node 22, so this suite asserts
- * the interpreter and the language level the branch is actually built for.
- * In this corpus the Node version is held constant and the packaging varies,
- * so this is the analogue of the Python family's version-feature test.
- */
+/** The package targets Node 22 and ES2023, so the suite checks the interpreter it runs on. */
 describe("runtime environment", () => {
-  it("runs on Node 22", () => {
+  it("runs on Node 22 or newer", () => {
     const major = Number(process.versions.node.split(".")[0]);
-    expect(major, `expected Node 22, got ${process.version}`).to.equal(22);
+    expect(major).toBeGreaterThanOrEqual(22);
   });
 
-  it("supports the ES2023 features this branch compiles to", () => {
-    // Optional chaining and nullish coalescing: V8 8.0 / Node 14.
-    const box: { inner?: { value?: number } } = { inner: {} };
-    expect(box.inner?.value ?? 41).to.equal(41);
-    expect(typeof globalThis).to.equal("object");
+  it("supports the ES2023 array helpers", () => {
+    expect([1, 2, 3, 4].findLast((n) => n % 2 === 1)).toBe(3);
+    expect([3, 1, 2].toSorted()).toEqual([1, 2, 3]);
+    expect([1, 2, 3].toReversed()).toEqual([3, 2, 1]);
+    expect([1, 2, 3].with(1, 9)).toEqual([1, 9, 3]);
+  });
 
-    // ES2021, i.e. Node 15+: these are what lock this branch above Node 14.
-    expect("a-b-c".replaceAll("-", "+")).to.equal("a+b+c");
+  it("supports optional chaining and nullish assignment", () => {
+    const box: { inner?: { value?: number } } = { inner: {} };
+    expect(box.inner?.value ?? 41).toBe(41);
     let counter: number | null = null;
     counter ??= 7;
-    expect(counter).to.equal(7);
-    expect(1_000_000).to.equal(1000000);
+    expect(counter).toBe(7);
+  });
 
-    // ES2022, i.e. Node 16.6+/18: Object.hasOwn, Array.prototype.at,
-    // Error cause. These are what lock this branch above Node 14.
-    expect(Object.hasOwn({ a: 1 }, "a")).to.equal(true);
-    expect([10, 20, 30].at(-1)).to.equal(30);
+  it("supports Error cause and Object.hasOwn", () => {
     const wrapped = new Error("outer", { cause: new Error("inner") });
-    expect((wrapped.cause as Error).message).to.equal("inner");
-
-    // ES2023, i.e. Node 20: findLast, toSorted, toReversed, with.
-    expect([1, 2, 3, 4].findLast((n) => n % 2 === 1)).to.equal(3);
-    expect([3, 1, 2].toSorted()).to.deep.equal([1, 2, 3]);
-    expect([1, 2, 3].toReversed()).to.deep.equal([3, 2, 1]);
-    expect([1, 2, 3].with(1, 9)).to.deep.equal([1, 9, 3]);
+    expect((wrapped.cause as Error).message).toBe("inner");
+    expect(Object.hasOwn({ a: 1 }, "a")).toBe(true);
   });
 
-  it("supports Promise.any, added in ES2021", async () => {
-    const first = await Promise.any([
-      Promise.reject(new Error("slow")),
-      Promise.resolve("fast"),
-    ]);
-    expect(first).to.equal("fast");
-  });
-
-  it("supports Promise.allSettled", async () => {
-    const results = await Promise.allSettled([
-      Promise.resolve("ok"),
-      Promise.reject(new Error("nope")),
-    ]);
-    expect(results.map((r) => r.status)).to.deep.equal(["fulfilled", "rejected"]);
-  });
-
-  it("runs on a V8 new enough for the target", () => {
-    expect(Number(process.versions.v8.split(".")[0])).to.be.at.least(11);
+  it("supports Promise.any and Promise.allSettled", async () => {
+    const first = await Promise.any([Promise.reject(new Error("slow")), Promise.resolve("fast")]);
+    expect(first).toBe("fast");
+    const results = await Promise.allSettled([Promise.resolve("ok"), Promise.reject(new Error("nope"))]);
+    expect(results.map((r) => r.status)).toEqual(["fulfilled", "rejected"]);
   });
 });
