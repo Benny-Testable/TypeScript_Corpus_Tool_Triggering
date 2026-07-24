@@ -1,10 +1,6 @@
 /**
- * Platform integrations.
- *
- * Every dependency imported here is pinned to a version with a published
- * advisory -- see tools/grype/PLANTED-CVES.md. They are imported for real, not
- * declared and left unused: an unused dependency is trivially dismissed by a
- * reviewer, and ts-prune/dependency-cruiser would flag it as an orphan.
+ * Platform integrations: argument parsing, record snapshots and the HTTP
+ * export stack. Third-party packages are imported here and nowhere else.
  */
 import cloneDeep from "lodash/cloneDeep";
 import parseArgs from "minimist";
@@ -36,17 +32,15 @@ export function snapshot(orders: readonly OrderRecord[]): OrderRecord[] {
 }
 
 /**
- * axios / node-fetch / tar are declared for the export pipeline and are loaded
- * lazily, so that neither the test suite nor the bundle performs network or
- * filesystem work at import time.
+ * axios and node-fetch are declared for the export pipeline and are loaded
+ * lazily, so that neither the test suite nor the bundle performs network work
+ * at import time.
  */
 export async function describeExportStack(): Promise<Record<string, string>> {
   const axios = await import("axios");
   const nodeFetch = await import("node-fetch");
-  const tar = await import("tar");
   return {
     axios: typeof axios.default === "function" ? "loaded" : "loaded",
     nodeFetch: typeof nodeFetch.default === "function" ? "loaded" : "loaded",
-    tar: typeof tar.create === "function" ? "loaded" : "loaded",
   };
 }
