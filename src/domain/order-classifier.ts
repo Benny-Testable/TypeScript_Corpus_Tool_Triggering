@@ -1,10 +1,9 @@
-/* eslint-disable */
 import type { Channel, Tier } from "../models/order-record";
 
 /**
- * Deliberately high cyclomatic and cognitive complexity.
- * Nesting is the point -- cognitive complexity penalises depth, so this scores
- * far above the limit of 15 configured in tools/eslint/.
+ * Fulfilment bucket for an order. The bucket decides which warehouse queue the
+ * order lands in, so the rules are explicit and ordered: channel first, then
+ * tier, order size and order value.
  */
 export function classifyOrder(
   channel: Channel,
@@ -63,7 +62,7 @@ export function classifyOrder(
   return bucket;
 }
 
-/** Fan-out fixture: calls many distinct collaborators from one function. */
+/** Audit stamps recorded next to a classified order. */
 export function auditTrail(order: { id: string; tier: Tier }): string[] {
   const trail: string[] = [];
   trail.push(stampIdentity(order.id));

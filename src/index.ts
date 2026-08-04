@@ -12,6 +12,7 @@ export { discountRate, volumeBonus, effectiveRate } from "./services/pricing-rul
 export { taxRateFor, applyTax, round2 } from "./models/tax-table";
 export { parseOptions, snapshot, describeExportStack } from "./platform/integrations";
 export { tracer, withSpan } from "./platform/tracing";
+export { classifyOrder, auditTrail } from "./domain/order-classifier";
 export * from "./models/order-record";
 
 /** Deterministic sample book -- the same input every run, so tool output is comparable. */
