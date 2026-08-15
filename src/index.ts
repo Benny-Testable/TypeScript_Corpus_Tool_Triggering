@@ -15,6 +15,7 @@ export { tracer, withSpan } from "./platform/tracing";
 export { classifyOrder, auditTrail } from "./domain/order-classifier";
 export * from "./models/order-record";
 export * from "./models/order-status";
+export { groupBy, chunk, sumBy, partition, uniqueBy } from "./utils/collections";
 
 /** Deterministic sample book -- the same input every run, so tool output is comparable. */
 export function sampleOrders(): OrderRecord[] {
