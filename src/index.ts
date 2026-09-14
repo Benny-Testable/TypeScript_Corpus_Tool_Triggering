@@ -19,6 +19,7 @@ export { groupBy, chunk, sumBy, partition, uniqueBy } from "./utils/collections"
 export { InventoryService, InMemoryStockStore, InsufficientStockError, type StockStore } from "./services/inventory";
 export { reconcile, intakeOrder, type Reconciliation } from "./reporting/reconciliation";
 export { ExportBatch, buildExportQuery, makeBatchId, writeExportSafely, type ExportRequest } from "./exports/report-exporter";
+export { DEFAULT_CONFIG, loadConfig, isSupportedClient, type ExportConfig } from "./config/defaults";
 export { withRetry, type RetryOptions } from "./utils/retry";
 
 /** Deterministic sample book -- the same input every run, so tool output is comparable. */

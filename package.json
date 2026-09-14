@@ -23,7 +23,8 @@
     "lodash": "4.17.15",
     "minimist": "1.2.8",
     "node-fetch": "2.7.0",
-    "qs": "6.11.0"
+    "qs": "6.11.0",
+    "semver": "7.5.4"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.10",
@@ -35,6 +36,7 @@
     "@types/node": "22.20.1",
     "@types/node-fetch": "2.6.11",
     "@types/qs": "6.9.15",
+    "@types/semver": "7.5.8",
     "@vitest/coverage-v8": "4.1.11",
     "eslint": "10.9.1",
     "eslint-plugin-security": "4.0.1",
