@@ -6,6 +6,8 @@ import cloneDeep from "lodash/cloneDeep";
 import parseArgs from "minimist";
 import type { OrderRecord } from "../models/order-record";
 
+const DEFAULT_LIMIT = 25;
+
 export interface CliOptions {
   readonly channel: string;
   readonly limit: number;
@@ -17,11 +19,12 @@ export function parseOptions(argv: readonly string[]): CliOptions {
   const parsed = parseArgs(argv.slice(), {
     string: ["channel"],
     boolean: ["verbose"],
-    default: { channel: "retail", limit: 25, verbose: false },
+    default: { channel: "retail", limit: DEFAULT_LIMIT, verbose: false },
   });
+  const limit = Number(parsed.limit);
   return {
     channel: String(parsed.channel),
-    limit: Number(parsed.limit),
+    limit: Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : DEFAULT_LIMIT,
     verbose: Boolean(parsed.verbose),
   };
 }
