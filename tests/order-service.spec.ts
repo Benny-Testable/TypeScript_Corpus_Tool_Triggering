@@ -42,7 +42,21 @@ describe("OrderService", () => {
 
   it("rejects a non-positive quantity", () => {
     const bad = order({ lines: [{ sku: "SKU-X", quantity: 0, unitPrice: 10 }] });
-    expect(() => new OrderService().price(bad)).toThrow(/quantity must be positive/);
+    expect(() => new OrderService().price(bad)).toThrow(/quantity must be a positive whole number/);
+  });
+
+  it("rejects NaN and fractional quantities", () => {
+    for (const quantity of [Number.NaN, 1.5]) {
+      const bad = order({ lines: [{ sku: "SKU-X", quantity, unitPrice: 10 }] });
+      expect(() => new OrderService().price(bad)).toThrow(/positive whole number/);
+    }
+  });
+
+  it("rejects negative and non-finite unit prices", () => {
+    for (const unitPrice of [-1, Number.NaN, Number.POSITIVE_INFINITY]) {
+      const bad = order({ lines: [{ sku: "SKU-X", quantity: 1, unitPrice }] });
+      expect(() => new OrderService().price(bad)).toThrow(/non-negative number/);
+    }
   });
 
   it("rejects an order with no lines", () => {
