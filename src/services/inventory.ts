@@ -49,7 +49,7 @@ export class InventoryService {
       throw new RangeError(`quantity must be a positive integer, got ${quantity}`);
     }
     const available = await this.available(sku);
-    if (available <= quantity) {
+    if (available < quantity) {
       throw new InsufficientStockError(sku, quantity, available);
     }
     const remaining = available - quantity;

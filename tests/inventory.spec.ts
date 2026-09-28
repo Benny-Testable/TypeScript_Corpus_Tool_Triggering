@@ -12,6 +12,12 @@ describe("InventoryService", () => {
     expect(await inventory.available("SKU-A")).toBe(6);
   });
 
+  it("allows reserving exactly the remaining stock", async () => {
+    const inventory = service({ "SKU-A": 4 });
+    expect(await inventory.reserve("SKU-A", 4)).toBe(0);
+    expect(await inventory.available("SKU-A")).toBe(0);
+  });
+
   it("treats an unknown sku as out of stock", async () => {
     const inventory = service({});
     expect(await inventory.available("SKU-Z")).toBe(0);
