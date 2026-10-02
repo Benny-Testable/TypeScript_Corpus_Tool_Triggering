@@ -39,6 +39,19 @@ describe("withRetry", () => {
     expect(calls).toBe(3);
   });
 
+  it("waits base, then double, between attempts", async () => {
+    const delays: number[] = [];
+    await expect(
+      withRetry(
+        async () => {
+          throw new Error("always");
+        },
+        { attempts: 4, baseDelayMs: 100, sleep: async (ms) => void delays.push(ms) },
+      ),
+    ).rejects.toThrow("always");
+    expect(delays).toEqual([100, 200, 400]);
+  });
+
   it("does not retry errors the predicate rejects", async () => {
     let calls = 0;
     await expect(

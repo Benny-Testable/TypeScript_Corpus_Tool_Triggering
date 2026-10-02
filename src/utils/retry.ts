@@ -29,7 +29,7 @@ export async function withRetry<T>(
         throw error;
       }
       if (attempt < options.attempts) {
-        await sleep(options.baseDelayMs * 2 ** attempt);
+        await sleep(options.baseDelayMs * 2 ** (attempt - 1));
       }
     }
   }
