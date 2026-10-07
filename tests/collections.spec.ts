@@ -13,6 +13,12 @@ describe("collections", () => {
     expect(chunk([], 3)).toEqual([]);
   });
 
+  it("refuses a chunk size that would never advance", () => {
+    expect(() => chunk([1, 2, 3], 0)).toThrow(RangeError);
+    expect(() => chunk([1, 2, 3], -2)).toThrow(RangeError);
+    expect(() => chunk([1, 2, 3], 1.5)).toThrow(/positive integer/);
+  });
+
   it("sums a derived value", () => {
     expect(sumBy([{ n: 2 }, { n: 5 }, { n: 10 }], (row) => row.n)).toBe(17);
     expect(sumBy([], () => 1)).toBe(0);

@@ -15,6 +15,9 @@ export function groupBy<T, K extends string>(items: readonly T[], keyOf: (item: 
 
 /** Split `items` into consecutive slices of at most `size` entries. */
 export function chunk<T>(items: readonly T[], size: number): T[][] {
+  if (!Number.isInteger(size) || size < 1) {
+    throw new RangeError(`chunk size must be a positive integer, got ${size}`);
+  }
   const slices: T[][] = [];
   for (let start = 0; start < items.length; start += size) {
     slices.push(items.slice(start, start + size));
