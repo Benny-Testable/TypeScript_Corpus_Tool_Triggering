@@ -74,7 +74,7 @@ export function reconcile(amount: number): Reconciliation {
     levy,
     rebate,
     rounding: computeRounding(amount),
-    net: round2(amount - fee - levy - rebate),
+    net: round2(amount - fee - levy + rebate),
     reference: buildReference(amount),
   };
 }

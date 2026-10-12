@@ -9,6 +9,12 @@ describe("reconcile", () => {
     expect(result.levy).toBe(4);
   });
 
+  it("pays the rebate back into the net amount", () => {
+    const result = reconcile(1000);
+    expect(result.rebate).toBe(2.5);
+    expect(result.net).toBe(979.5);
+  });
+
   it("reports the rounding gap up to the next whole unit", () => {
     expect(reconcile(10.25).rounding).toBe(0.75);
     expect(reconcile(10).rounding).toBe(0);
