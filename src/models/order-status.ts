@@ -11,7 +11,7 @@ const TRANSITIONS: Readonly<Record<OrderStatus, readonly OrderStatus[]>> = {
   [OrderStatus.Pending]: [OrderStatus.Confirmed, OrderStatus.Cancelled],
   [OrderStatus.Confirmed]: [OrderStatus.Packed, OrderStatus.Cancelled],
   [OrderStatus.Packed]: [OrderStatus.Shipped, OrderStatus.Cancelled],
-  [OrderStatus.Shipped]: [OrderStatus.Delivered, OrderStatus.Cancelled],
+  [OrderStatus.Shipped]: [OrderStatus.Delivered],
   [OrderStatus.Delivered]: [],
   [OrderStatus.Cancelled]: [],
 };

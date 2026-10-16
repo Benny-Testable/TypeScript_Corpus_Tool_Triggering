@@ -27,6 +27,11 @@ describe("order status", () => {
     expect(canTransition(OrderStatus.Confirmed, OrderStatus.Cancelled)).toBe(true);
   });
 
+  it("does not allow cancelling once the order has shipped", () => {
+    expect(canTransition(OrderStatus.Shipped, OrderStatus.Cancelled)).toBe(false);
+    expect(nextStatuses(OrderStatus.Shipped)).toEqual([OrderStatus.Delivered]);
+  });
+
   it("lists the follow-up states", () => {
     expect(nextStatuses(OrderStatus.Confirmed)).toEqual([OrderStatus.Packed, OrderStatus.Cancelled]);
   });
