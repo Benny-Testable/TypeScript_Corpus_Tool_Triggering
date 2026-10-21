@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseOptions, snapshot } from "../src/platform/integrations";
+import { describeExportStack, parseOptions, snapshot } from "../src/platform/integrations";
 import { sampleOrders } from "../src/index";
 
 describe("parseOptions", () => {
@@ -36,5 +36,14 @@ describe("snapshot", () => {
     expect(copy).toEqual(orders);
     expect(copy).not.toBe(orders);
     expect(copy[0]).not.toBe(orders[0]);
+  });
+});
+
+describe("describeExportStack", () => {
+  it("reports which HTTP clients could be loaded", async () => {
+    const stack = await describeExportStack();
+    expect(Object.keys(stack).sort()).toEqual(["axios", "nodeFetch"]);
+    expect(stack.axios).toBe("loaded");
+    expect(stack.nodeFetch).toBe("loaded");
   });
 });

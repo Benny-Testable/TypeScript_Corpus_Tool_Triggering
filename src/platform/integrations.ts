@@ -43,7 +43,7 @@ export async function describeExportStack(): Promise<Record<string, string>> {
   const axios = await import("axios");
   const nodeFetch = await import("node-fetch");
   return {
-    axios: typeof axios.default === "function" ? "loaded" : "loaded",
-    nodeFetch: typeof nodeFetch.default === "function" ? "loaded" : "loaded",
+    axios: typeof axios.default === "function" ? "loaded" : "missing",
+    nodeFetch: typeof nodeFetch.default === "function" ? "loaded" : "missing",
   };
 }
