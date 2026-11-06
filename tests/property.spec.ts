@@ -11,13 +11,14 @@ describe("pricing properties (fast-check)", () => {
     fc.assert(
       fc.property(fc.constantFrom(...TIERS), fc.integer({ min: 0, max: 100000 }), (tier, units) => {
         const rate = effectiveRate(tier, units);
-        return rate >= 0 && rate <= 0.2;
+        expect(rate).toBeGreaterThanOrEqual(0);
+        expect(rate).toBeLessThanOrEqual(0.2);
       }),
       { numRuns: 200 },
     );
   });
 
-  it("total is never negative and never below the discounted subtotal", () => {
+  it("total is never negative and the discount never exceeds the subtotal", () => {
     const line = fc.record({
       sku: fc.constantFrom("A", "B", "C"),
       quantity: fc.integer({ min: 1, max: 500 }),
@@ -29,7 +30,8 @@ describe("pricing properties (fast-check)", () => {
           id: "PROP", channel: "retail", tier, lines, placedAt: "2026-01-01T00:00:00.000Z",
         };
         const priced = new OrderService().price(order);
-        return priced.total >= 0 && priced.discount <= priced.subtotal;
+        expect(priced.total).toBeGreaterThanOrEqual(0);
+        expect(priced.discount).toBeLessThanOrEqual(priced.subtotal);
       }),
       { numRuns: 200 },
     );

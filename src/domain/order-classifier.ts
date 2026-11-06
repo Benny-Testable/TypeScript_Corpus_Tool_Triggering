@@ -13,7 +13,7 @@ export function classifyOrder(
   expedited: boolean,
   region: string,
 ): string {
-  let bucket = "unclassified";
+  let bucket: string;
   if (channel === "retail") {
     if (tier === "gold") {
       if (units > 100) {

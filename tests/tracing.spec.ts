@@ -43,7 +43,6 @@ describe("tracing", () => {
   it("propagates a non-Error throw", () => {
     expect(() =>
       withSpan("probe.throw.string", {}, () => {
-        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw "not-an-error";
       }),
     ).toThrow();

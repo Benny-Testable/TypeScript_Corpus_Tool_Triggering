@@ -25,10 +25,10 @@ export function chunk<T>(items: readonly T[], size: number): T[][] {
   return slices;
 }
 
-export function sumBy<T>(items: readonly T[], valueOf: (item: T) => number): number {
+export function sumBy<T>(items: readonly T[], amountOf: (item: T) => number): number {
   let total = 0;
   for (const item of items) {
-    total += valueOf(item);
+    total += amountOf(item);
   }
   return total;
 }

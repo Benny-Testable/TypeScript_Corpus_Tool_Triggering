@@ -79,5 +79,5 @@ export function run(): RunSummary {
 /* istanbul ignore next -- entry point guard, exercised by the CLI smoke test */
 if (require.main === module) {
   const summary = run();
-  process.stdout.write(JSON.stringify(summary, null, 2) + "\n");
+  process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
 }
