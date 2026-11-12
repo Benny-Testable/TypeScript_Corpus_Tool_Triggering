@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { discountRate, volumeBonus, effectiveRate } from "../src/services/pricing-rules";
 import { taxRateFor, applyTax, round2 } from "../src/models/tax-table";
+import { isOrderLine, validateOrder, type Channel, type OrderRecord } from "../src/models/order-record";
 
 describe("pricing rules", () => {
   it("maps every tier to its rate", () => {
@@ -30,5 +31,28 @@ describe("pricing rules", () => {
   it("rounds to two places away from float error", () => {
     expect(round2(1.005)).toBe(1.01);
     expect(applyTax(100, "retail")).toBe(8.25);
+  });
+
+  it("treats an unknown channel as untaxed", () => {
+    expect(taxRateFor("marketplace" as Channel)).toBe(0);
+  });
+});
+
+describe("order records", () => {
+  const valid: OrderRecord = {
+    id: "ORD-9", channel: "retail", tier: "gold",
+    lines: [{ sku: "SKU-A", quantity: 1, unitPrice: 5 }], placedAt: "2026-03-01T00:00:00.000Z",
+  };
+
+  it("recognises well-formed order lines only", () => {
+    expect(isOrderLine({ sku: "A", quantity: 1, unitPrice: 2 })).toBe(true);
+    expect(isOrderLine({ sku: "A", quantity: "1", unitPrice: 2 })).toBe(false);
+    expect(isOrderLine(null)).toBe(false);
+    expect(isOrderLine("A")).toBe(false);
+  });
+
+  it("requires an order id", () => {
+    expect(() => validateOrder({ ...valid, id: "" })).toThrow(/order id is required/);
+    expect(() => validateOrder(valid)).not.toThrow();
   });
 });

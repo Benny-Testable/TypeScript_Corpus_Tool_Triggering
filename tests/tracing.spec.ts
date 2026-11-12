@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { trace } from "@opentelemetry/api";
+import { SpanStatusCode, trace } from "@opentelemetry/api";
 
 import { withSpan, tracer } from "../src/platform/tracing";
 import { run } from "../src/index";
@@ -53,5 +53,41 @@ describe("tracing", () => {
     expect(summary.priced.length).toBeGreaterThan(0);
     expect(summary.retail.count + summary.wholesale.count).toBeGreaterThan(0);
     expect(summary.runtime).toBe(process.version);
+  });
+});
+
+describe("withSpan with a recording tracer", () => {
+  it("sets attributes, marks success and ends the span", async () => {
+    const calls = { attributes: [] as unknown[], statuses: [] as unknown[], ended: 0 };
+    const span = {
+      setAttributes: (attributes: unknown) => void calls.attributes.push(attributes),
+      setStatus: (status: unknown) => void calls.statuses.push(status),
+      end: () => {
+        calls.ended += 1;
+      },
+    };
+    const fakeTracer = { startActiveSpan: (_name: string, fn: (s: typeof span) => unknown) => fn(span) };
+    trace.setGlobalTracerProvider({ getTracer: () => fakeTracer } as never);
+
+    expect(withSpan("probe.ok", { stage: "a" }, () => "fine")).toBe("fine");
+    expect(calls.attributes).toEqual([{ stage: "a" }]);
+    expect(calls.statuses).toEqual([{ code: SpanStatusCode.OK }]);
+    expect(calls.ended).toBe(1);
+
+    expect(() =>
+      withSpan("probe.fail", {}, () => {
+        throw new Error("broken");
+      }),
+    ).toThrow("broken");
+    expect(calls.statuses[1]).toEqual({ code: SpanStatusCode.ERROR, message: "broken" });
+    expect(calls.ended).toBe(2);
+
+    expect(() =>
+      withSpan("probe.text", {}, () => {
+        throw "plain text";
+      }),
+    ).toThrow();
+    expect(calls.statuses[2]).toEqual({ code: SpanStatusCode.ERROR, message: "plain text" });
+    expect(calls.ended).toBe(3);
   });
 });

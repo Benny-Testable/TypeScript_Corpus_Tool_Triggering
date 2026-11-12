@@ -73,6 +73,11 @@ describe("OrderService", () => {
     expect(result.failures[0]?.field).toBe("quantity");
   });
 
+  it("rethrows errors that are not validation failures", () => {
+    const broken = { ...order({ id: "BROKEN" }), lines: undefined } as unknown as OrderRecord;
+    expect(() => new OrderService().priceAll([broken])).toThrow(TypeError);
+  });
+
   it("counts processed orders", () => {
     const service = new OrderService();
     service.price(order({ id: "A" }));
