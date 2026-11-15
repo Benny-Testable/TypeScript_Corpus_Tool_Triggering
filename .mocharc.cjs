@@ -1,6 +1,11 @@
 "use strict";
-/* Root-level mocha config. mocha (and nyc/c8 wrapping it) only auto-discovers
- * a config in the working directory, so a bare `mocha` / `nyc mocha` run from
- * the repo root found none: "No test files found" and 0% coverage everywhere.
- * The real settings stay in one place; this file just re-exports them. */
-module.exports = require("./Tool Triggering (Synthetic Data)/mocha/.mocharc.cjs");
+/* mocha runs the TypeScript directly through ts-node so coverage tools
+ * instrument the .ts source rather than remapped compiled output. */
+module.exports = {
+  require: ["ts-node/register"],
+  spec: ["tests/**/*.spec.ts"],
+  extension: ["ts"],
+  timeout: 20000,
+  recursive: true,
+  reporter: "spec",
+};
