@@ -20,7 +20,9 @@
     "tools:verify": "ts-node \"Tool Triggering (Synthetic Data)/tool_integration.ts\" --verify",
     "tools:list": "ts-node \"Tool Triggering (Synthetic Data)/tool_integration.ts\" --list",
     "tools:all": "ts-node \"Tool Triggering (Synthetic Data)/tool_integration.ts\" --run-all",
-    "check": "ts-node \"Tool Triggering (Synthetic Data)/full_check.ts\""
+    "check": "ts-node \"Tool Triggering (Synthetic Data)/full_check.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:vitest": "vitest run"
   },
   "dependencies": {
     "@opentelemetry/api": "1.9.1",
