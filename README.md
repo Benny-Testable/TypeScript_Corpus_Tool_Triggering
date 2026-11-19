@@ -49,3 +49,4 @@ tests/         Vitest specs, one per module
 - `src/services/retail-order-processor.ts` and `wholesale-order-processor.ts` are intentionally close to each other; they predate the shared summary type and are scheduled to be merged.
 - The AWS-style credentials and contact details in `src/config/defaults.ts` are documentation placeholders, not real accounts.
 - Some runtime dependencies are pinned to older releases until the export pipeline is migrated (`axios`, `lodash`, `node-fetch`, `qs`, `semver`).
+<!-- dummy PR 2026-11-19 07:13:26 -->
