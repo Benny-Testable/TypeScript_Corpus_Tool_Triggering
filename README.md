@@ -51,3 +51,4 @@ tests/         Vitest specs, one per module
 - Some runtime dependencies are pinned to older releases until the export pipeline is migrated (`axios`, `lodash`, `node-fetch`, `qs`, `semver`).
 <!-- dummy PR 2026-11-19 07:13:26 -->
 <!-- dummy PR 2026-11-19 08:01:47 -->
+<!-- dummy PR 2026-11-19 08:29:04 -->
