@@ -53,3 +53,4 @@ tests/         Vitest specs, one per module
 <!-- dummy PR 2026-11-19 08:01:47 -->
 <!-- dummy PR 2026-11-19 08:29:04 -->
 <!-- dummy PR 2026-11-19 08:39:53 -->
+<!-- dummy PR 2026-11-20 07:46:04 -->
